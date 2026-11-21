@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>WS Archer</title>
+<meta name="description" content="In all things, there are three paths.">
+<meta name="theme-color" content="#171716">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #171716;
+    --ink: #f1f0ed;
+    --ink-soft: #b9b8b4;
+    --rule: rgba(255, 255, 255, 0.16);
+    --serif: "Cormorant Garamond", Georgia, "Times New Roman", serif;
+    --sans: "Montserrat", Arial, sans-serif;
+    --green: #72e28c;
+    --pad: clamp(24px, 4vw, 48px);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--serif);
+    font-weight: 300;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: inherit; }
+  .label, nav a, .mark span {
+    font-family: var(--sans);
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+  }
+
+  /* Hero: header + the line, over the living background */
+  .hero {
+    position: relative;
+    min-height: 82vh;
+    min-height: 82dvh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    isolation: isolate;
+  }
+  #field { position: absolute; inset: 0; width: 100%; height: 100%; z-index: -2; }
+  .hero::after {             /* keeps the type readable, fades into the page */
+    content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+    background:
+      linear-gradient(to bottom, rgba(23,23,22,.55) 0%, rgba(23,23,22,0) 22%, rgba(23,23,22,0) 62%, var(--bg) 100%),
+      linear-gradient(to right, rgba(23,23,22,0) 30%, rgba(23,23,22,.55) 70%);
+  }
+
+  header {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: var(--pad);
+  }
+  .mark { display: flex; align-items: center; gap: 14px; text-decoration: none; }
+  .mark svg { width: 30px; height: 30px; color: var(--green); filter: drop-shadow(0 0 5px rgba(114, 226, 140, .45)); }
+  .mark span { font-weight: 600; }
+  nav a { text-decoration: none; font-weight: 600; padding-bottom: 4px; border-bottom: 1px solid transparent; transition: border-color .3s; }
+  nav a:hover, nav a:focus-visible { border-bottom-color: var(--ink); }
+
+  .row {
+    display: grid; grid-template-columns: 1fr 1fr; gap: var(--pad);
+    padding: clamp(40px, 7vh, 80px) var(--pad);
+  }
+  .hero .row { flex: 1; align-content: center; }
+  .label { color: var(--ink-soft); font-weight: 400; padding-top: .55em; }
+
+  h1 {
+    font-weight: 300;
+    font-size: clamp(36px, 5.2vw, 72px);
+    line-height: 1.08;
+    letter-spacing: -0.01em;
+    text-shadow: 0 0 40px rgba(0,0,0,.5);
+  }
+  h1 em { font-style: italic; }
+
+  .contact { margin: 0 var(--pad); padding-left: 0; padding-right: 0; border-top: 1px solid var(--rule); }
+  .contact a {
+    font-size: clamp(22px, 2.2vw, 30px);
+    text-decoration: none; border-bottom: 1px solid var(--rule); padding-bottom: 2px;
+    transition: border-color .3s;
+  }
+  .contact a:hover, .contact a:focus-visible { border-bottom-color: var(--ink); }
+
+  footer { padding: var(--pad); color: var(--ink-soft); }
+  footer .label { padding: 0; }
+
+  /* Triskelion mark */
+  .tri path { fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; }
+  .draw path { stroke-dasharray: 1; stroke-dashoffset: 1; animation: draw 3s cubic-bezier(.4,0,.2,1) forwards; }
+  .draw path:nth-child(2) { animation-delay: .3s; }
+  .draw path:nth-child(3) { animation-delay: .6s; }
+  @keyframes draw { to { stroke-dashoffset: 0; } }
+
+  /* Slow reveal */
+  .reveal { opacity: 0; transform: translateY(8px); animation: rise 1.6s cubic-bezier(.2,.6,.2,1) forwards; }
+  .d2 { animation-delay: 1.1s; }
+  .d3 { animation-delay: 1.8s; }
+  @keyframes rise { to { opacity: 1; transform: none; } }
+
+  @media (prefers-reduced-motion: reduce) {
+    .reveal, .draw path { animation: none; opacity: 1; transform: none; stroke-dashoffset: 0; }
+  }
+  @media (max-width: 720px) {
+    .row { grid-template-columns: 1fr; gap: 18px; }
+    .row .label.empty { display: none; }
+    .hero::after {
+      background: linear-gradient(to bottom, rgba(23,23,22,.55) 0%, rgba(23,23,22,.15) 30%, rgba(23,23,22,.35) 60%, var(--bg) 100%);
+    }
+  }
+</style>
+</head>
+<body>
+
+<section class="hero">
+  <canvas id="field" aria-hidden="true"></canvas>
+
+  <header>
+    <a class="mark" href="/" aria-label="WS Archer — home">
+      <svg class="tri draw" data-tri data-stroke="2" aria-hidden="true"></svg>
+      <span>WS Archer</span>
+    </a>
+    <nav><a href="mailto:words@wsarcher.com">Contact</a></nav>
+  </header>
+
+  <div class="row">
+    <div class="label empty" aria-hidden="true"></div>
+    <h1 class="reveal d2">In all things, there&nbsp;are <em>three&nbsp;paths.</em></h1>
+  </div>
+</section>
+
+<section class="row contact reveal d3">
+  <div class="label">Correspondence</div>
+  <div><a href="mailto:words@wsarcher.com">words@wsarcher.com</a></div>
+</section>
+
+<footer class="reveal d3">
+  <span class="label">&copy; <span id="y">2026</span> WS Archer</span>
+</footer>
+
+<script>
+  // ---- Triskelion geometry: three angular spirals meeting at the centre ----
+  function triArm(k, R = 10, turns = 2.4) {
+    const n = Math.round(turns * 5);            // a corner every 72°
+    const th = (90 + 120 * k) * Math.PI / 180;
+    const cx = R * Math.cos(th), cy = R * Math.sin(th);
+    const pe = th + Math.PI, ps = pe - turns * 2 * Math.PI;
+    const pts = [];
+    for (let i = 0; i <= n; i++) {
+      const p = ps + (pe - ps) * i / n, r = R * (p - ps) / (pe - ps);
+      pts.push([cx + r * Math.cos(p), cy + r * Math.sin(p)]);
+    }
+    return pts;
+  }
+
+  document.querySelectorAll('svg[data-tri]').forEach(svg => {
+    svg.setAttribute('viewBox', '-17.5 -15.5 35 35');
+    for (let k = 0; k < 3; k++) {
+      const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      path.setAttribute('d', triArm(k).map((p, i) => (i ? 'L' : 'M') + p[0].toFixed(2) + ' ' + p[1].toFixed(2)).join(' '));
+      path.setAttribute('stroke-width', svg.dataset.stroke);
+      path.setAttribute('pathLength', '1');
+      svg.appendChild(path);
+    }
+  });
+
+  // ---- The field: flying low through a winding digital valley.
+  //      Now and then it shimmers green; on occasion a flash of lightning
+  //      ripples through the points; the triskelion gathers and dissolves. ----
+  (function () {
+    const c = document.getElementById('field'), ctx = c.getContext('2d');
+    const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const GREEN = '114,226,140', PALE = '200,206,200', FLASH = '225,238,255';
+    let W, H, dpr;
+
+    // Ground grid in camera space (x across, z ahead)
+    const GX = 150, GZ = 100, SP = 0.5, Z0 = 4;
+    const cells = [];
+    for (let j = 0; j < GZ; j++) for (let i = 0; i < GX; i++)
+      cells.push({ i, j, wx: (i - GX / 2) * SP, wz: Z0 + j * SP });
+    // stable per-point randomness, tied to the point's place in the world
+    const hash = (a, b, k) => { const v = Math.sin(a * 127.1 + b * 311.7 + k * 74.7) * 43758.5453; return v - Math.floor(v); };
+
+    // Terrain: a valley that winds left and right, ridged peaks on both sides
+    const bend = Z => Math.sin(Z * 0.045) * 5 + Math.sin(Z * 0.017 + 1.7) * 3;
+    function height(x, Z, off) {
+      const d = Math.abs(x - off);
+      const walls = Math.pow(Math.max(0, d - 2.5) / 10, 1.5) * 5;
+      const mask = Math.min(1, d / 6);
+      const ridge = (1 - Math.abs(Math.sin(x * .33 + Z * .11))) * 1.6
+                  + (1 - Math.abs(Math.sin(Z * .27 - x * .19 + 1.3))) * 1.1
+                  + (1 - Math.abs(Math.sin(x * .7 - Z * .21 + .4))) * .5;
+      return walls + ridge * mask * (0.6 + d / 10) + Math.sin(x * .5 + Z * .4) * .2;
+    }
+
+    // Events
+    const rnd = (a, b) => a + Math.random() * (b - a);
+    let shimmer = { at: 4500, dur: 4200 };
+    let bolt = { at: 9000, x: 0, Z: 0, dur: 1900 };
+    function nextShimmer(t) { shimmer = { at: t + rnd(11000, 20000), dur: rnd(3600, 5000) }; }
+    function nextBolt(t, drift) {
+      bolt = { at: t + rnd(16000, 32000), dur: 1900, x: 0, Z: 0, armed: false };
+    }
+
+    function size() {
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      W = c.width = c.clientWidth * dpr;
+      H = c.height = c.clientHeight * dpr;
+    }
+
+    function frame(t) {
+      ctx.fillStyle = '#0b0c0c'; ctx.fillRect(0, 0, W, H);
+
+      const f = H * 0.8, horizon = H * 0.34, camY = 4.2;
+      const drift = t * 0.0016;                               // forward flight
+      const base = drift - (drift % SP);
+      const baseRow = Math.round(base / SP);
+      const camOff = bend(drift + 6);
+
+      // shimmer: a green band that sweeps from the far end toward us
+      let sh = 0, shZ = 0;
+      if (t > shimmer.at) {
+        const p = (t - shimmer.at) / shimmer.dur;
+        if (p >= 1) nextShimmer(t);
+        else { sh = Math.sin(p * Math.PI); shZ = Z0 + GZ * SP * (1 - p); }
+      }
+
+      // lightning: a flicker, then a ripple racing outward through the points
+      let bl = 0, bR = 0, flick = 0;
+      if (t > bolt.at) {
+        if (!bolt.armed) {                                    // strike somewhere on a slope ahead
+          bolt.armed = true;
+          bolt.x = (Math.random() < .5 ? -1 : 1) * rnd(7, 14);
+          bolt.Z = drift + rnd(16, 30);
+        }
+        const e = t - bolt.at;
+        if (e > bolt.dur) nextBolt(t, drift);
+        else {
+          bl = Math.exp(-e / 650);
+          bR = e * 0.03;                                      // ripple radius, world units
+          flick = (e < 70 ? 1 : e < 140 ? .25 : e < 230 ? .85 : e < 320 ? .2 : 0) * Math.exp(-e / 400);
+        }
+      }
+
+      let lastTone = null;
+      for (let n = cells.length - 1; n >= 0; n--) {          // far to near
+        const cell = cells[n];
+        const row = cell.j + baseRow;
+        const keep = hash(cell.i, row, 0);
+        if (keep < 0.28) continue;                             // leave gaps
+        const seed = hash(cell.i, row, 1);
+        const jx = (hash(cell.i, row, 2) - .5) * SP * 1.9;      // scatter well past the grid
+        const jz = (hash(cell.i, row, 3) - .5) * SP * 1.9;
+        const x = cell.wx + jx;
+        const z = cell.wz - (drift % SP) + jz;
+        if (z < Z0 * .8) continue;
+        const Z = base + (cell.wz - Z0) + Z0 + jz;              // world z for this point
+        const off = bend(Z) - camOff;
+        const y = height(x, Z, off) + (hash(cell.i, row, 4) - .5) * .5;
+        const sx = W / 2 + f * x / z;
+        const sy = horizon + f * (camY - y) / z;
+        if (sx < -10 || sx > W + 10 || sy > H + 10 || sy < -10) continue;
+
+        const depth = 1 - (z - Z0) / (GZ * SP);               // 1 near, 0 far
+        const tw = 0.6 + 0.4 * Math.sin(t * .0009 + seed * 40);
+        const near = Math.min(1, (z - Z0) / 5);                  // soften the closest rows
+        let a = near * 1.3 * ((0.05 + 0.2 * depth) * tw + Math.min(y, 9) / 9 * 0.22 * (0.3 + depth));
+        let tone = PALE;
+
+        if (sh) {
+          const g = Math.exp(-Math.pow((z - shZ) / 3.2, 2)) * sh * (0.55 + 0.45 * Math.sin(t * .012 + seed * 90));
+          if (g > .05) { tone = GREEN; a += g * 0.75; }
+        }
+        if (bl) {
+          const dx = x + camOff - (bolt.x + bend(bolt.Z)), dz = Z - bolt.Z;
+          const ring = Math.exp(-Math.pow((Math.hypot(dx, dz) - bR) / 1.6, 2)) * bl;
+          const lit = ring + flick * 0.45 * (0.4 + depth);
+          if (lit > .06) { tone = FLASH; a += lit; }
+        }
+
+        const s = Math.max(1, (0.9 + depth * 2.2) * (0.6 + seed * .9) * dpr);
+        if (tone !== lastTone) { ctx.fillStyle = `rgb(${tone})`; lastTone = tone; }
+        ctx.globalAlpha = Math.min(a, .95);
+        ctx.fillRect(sx, sy, s, s);
+      }
+      ctx.globalAlpha = 1;
+
+      // sheet glow of the strike, and faint streaks across the sky
+      if (flick) { ctx.fillStyle = `rgba(${FLASH},${(flick * .07).toFixed(3)})`; ctx.fillRect(0, 0, W, H); }
+      for (let k = 0; k < 3; k++) {
+        const p = ((t * (0.00002 + k * 0.000007) + k * .37) % 1);
+        const y0 = H * (0.05 + p * 0.5);
+        const g = ctx.createLinearGradient(0, y0, W, y0 - H * .2);
+        const al = 0.04 + k * 0.012 + flick * .2;
+        g.addColorStop(0, 'rgba(180,200,195,0)');
+        g.addColorStop(.5, `rgba(180,200,195,${al})`);
+        g.addColorStop(1, 'rgba(180,200,195,0)');
+        ctx.strokeStyle = g; ctx.lineWidth = dpr;
+        ctx.beginPath(); ctx.moveTo(0, y0); ctx.lineTo(W, y0 - H * .2); ctx.stroke();
+      }
+
+      if (!still) requestAnimationFrame(frame);
+    }
+    size(); addEventListener('resize', size);
+    requestAnimationFrame(frame);
+  })();
+
+  document.getElementById('y').textContent = new Date().getFullYear();
+</script>
+</body>
+</html>
